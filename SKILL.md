@@ -30,11 +30,11 @@ If `~/.config/ad-image/brand-profile.json` does not exist, run the setup flow be
 9. **Portrait folder path.** Absolute path to a folder of transparent-background portrait PNGs of the person who'll appear in the ads. (If they don't have any, link them to https://www.remove.bg/ or guide them to use Photoshop's Subject Select + Mask.) Examples include pointing-right, pointing-left, neutral chin pose, thumbs-up, etc.
 10. **Logo or mascot path** (optional). Absolute path to a small brand mark or mascot PNG that'll appear in the top-right corner of every ad.
 11. **Output folder.** Where should generated ads be saved? Default: `~/Documents/ad-image-output/`. Approved keepers go to a `Keepers/` subfolder.
-12. **Image generator.** Currently supported:
-    - `higgsfield_gpt_image_2` (recommended — best text rendering, but requires a Higgsfield account with credit)
-    - `nano_banana_2` (Higgsfield, also great)
-    - `openai_gpt_image` (direct OpenAI API — requires `OPENAI_API_KEY` env var)
-    - Pick one.
+12. **Image generator path.** Pick one:
+    - `higgsfield` (recommended — auto-discovers the best image model on every run)
+    - `openai` (direct OpenAI API — uses whatever the latest `gpt-image-*` model is, requires `OPENAI_API_KEY` env var)
+
+    **Important:** the skill does NOT hardcode a specific model. New image models ship all the time (e.g. `gpt_image_2` today, `gpt_image_3` tomorrow, `nano_banana_pro` after that). On every generation run, the skill queries the platform's current "best model" recommendation and uses that. The user's profile only stores the *path* (Higgsfield vs OpenAI), not a frozen model ID.
 
 ### After collecting answers
 
@@ -72,7 +72,7 @@ Write the profile to `~/.config/ad-image/brand-profile.json`:
     "save_folder": "absolute path",
     "keepers_folder": "absolute path"
   },
-  "generator": "higgsfield_gpt_image_2"
+  "generator_path": "higgsfield"
 }
 ```
 
@@ -85,7 +85,11 @@ After writing the file, briefly summarize back what you saved and tell the user 
 ## Generation flow (after setup is complete)
 
 1. **Read** `~/.config/ad-image/brand-profile.json`. If it doesn't exist or is missing required keys, run setup first.
-2. **Ask the user for the angle/promise.** What hook is this ad selling? (e.g. "Save 20 hours a week", "Make your first $10k month")
+2. **Pick the best current image model.** Always do this dynamically — never hardcode.
+   - **If `generator_path` is `higgsfield`:** call `mcp__d22ec091-cc09-40c1-9c5d-86a96f9441d0__models_explore` with `action: "recommend"`, `input: "image"`, `type: "image"`, `query: "best model for advertising images with crisp text rendering, typography, logos, photorealistic portraits, 1:1 aspect ratio"`. Pick the top recommendation that supports `1:1` aspect ratio AND image input (so reference portraits work). Falls back to listing all image models with `action: "list"` if recommend returns nothing useful.
+   - **If `generator_path` is `openai`:** use the latest `gpt-image-*` model the user's OpenAI SDK exposes. Don't pin a version — let the SDK pick the current default.
+   - Tell the user briefly which model was picked ("Using `<model_id>` from Higgsfield — currently their top-rated for typography-heavy ads.") so they know what's running.
+3. **Ask the user for the angle/promise.** What hook is this ad selling? (e.g. "Save 20 hours a week", "Make your first $10k month")
 3. **Propose 2–3 headline structures** in their voice tone. Format options:
    - One bold promise: "Claude builds my ads."
    - Stat hook: "0 to X in Y days."
@@ -100,7 +104,7 @@ After writing the file, briefly summarize back what you saved and tell the user 
    - CTA copy (e.g. "Get the system →", "Join now →", "Steal my workflow →")
 6. **Upload assets to Higgsfield** via `mcp__d22ec091-cc09-40c1-9c5d-86a96f9441d0__media_upload` + `media_confirm`. Required: portrait + logo (if set). Plus any proof card source images.
 7. **Build the prompt** by filling the template (below) with the brand profile values and user choices.
-8. **Generate** with `count: 4`, `aspect_ratio: "1:1"`, `quality: "high"`, `resolution: "2k"`, model from profile.
+8. **Generate** with `count: 4`, `aspect_ratio: "1:1"`, `quality: "high"`, `resolution: "2k"`, model from step 2 (auto-discovered, not hardcoded).
 9. **Poll** with `mcp__d22ec091-cc09-40c1-9c5d-86a96f9441d0__job_display` every 90–180 seconds.
 10. **Download** results to the output folder with descriptive filenames (`ad-{slug}-{a|b|c|d}.png`).
 11. **Read each + open in Preview** (`open -a Preview` on macOS, `xdg-open` on Linux).
@@ -203,7 +207,7 @@ Below the headline, an accent subhead in {{ACCENT_COLOR}} MONOSPACE font ({{ACCE
 mcp__d22ec091-cc09-40c1-9c5d-86a96f9441d0__generate_image
 {
   "params": {
-    "model": "<from profile>",
+    "model": "<auto-discovered from models_explore>",
     "aspect_ratio": "1:1",
     "quality": "high",
     "resolution": "2k",

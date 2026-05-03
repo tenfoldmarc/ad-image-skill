@@ -29,5 +29,5 @@
     "save_folder": "/Users/yourname/Documents/brewlab/ad-output",
     "keepers_folder": "/Users/yourname/Documents/brewlab/ad-output/Keepers"
   },
-  "generator": "higgsfield_gpt_image_2"
+  "generator_path": "higgsfield"
 }
