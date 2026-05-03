@@ -1,0 +1,33 @@
+{
+  "brand": {
+    "name": "Brewlab Coffee",
+    "offer": "We roast small-batch single-origin coffee shipped fresh weekly.",
+    "audience": "Home brewers and cafe owners who care about origin transparency.",
+    "voice_tone": "Warm, knowledgeable, no jargon."
+  },
+  "design": {
+    "palette_a": {
+      "background": "#1A1208",
+      "accent": "#C97B4A",
+      "type": "#F4EFE6",
+      "name": "Roastery dark"
+    },
+    "palette_b": {
+      "background": "#EFE6D6",
+      "accent": "#7A3B1F",
+      "type": "#1A1208",
+      "name": "Linen editorial"
+    },
+    "display_font": "Fraunces Black",
+    "accent_font": "JetBrains Mono Bold"
+  },
+  "assets": {
+    "portrait_folder": "/Users/yourname/Documents/brewlab/portraits",
+    "logo_path": "/Users/yourname/Documents/brewlab/logo.png"
+  },
+  "output": {
+    "save_folder": "/Users/yourname/Documents/brewlab/ad-output",
+    "keepers_folder": "/Users/yourname/Documents/brewlab/ad-output/Keepers"
+  },
+  "generator": "higgsfield_gpt_image_2"
+}
