@@ -54,7 +54,7 @@ Key fields:
 - **`design`** — two palettes (A and B) with hex codes, plus display + accent font choices
 - **`assets`** — paths to your portrait folder and logo file
 - **`output`** — where generated ads are saved
-- **`generator_path`** — `higgsfield` or `openai`. The skill auto-picks the best *current* model on every run via Higgsfield's recommend endpoint (or whatever OpenAI's latest `gpt-image-*` is). New models ship constantly, so the skill never hardcodes a specific version.
+- **`generator_path`** — `higgsfield` (uses `gpt_image_2`) or `openai` (uses `gpt-image-1` via your API key)
 
 ## Why this template works
 
