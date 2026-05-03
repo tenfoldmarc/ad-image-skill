@@ -15,25 +15,34 @@ Type `/ad-image` in Claude Code and it walks you through generating a batch of 4
 
 The first time you run it, a one-time setup wizard captures your brand colors, fonts, portraits, logo, and voice, and saves them to `~/.config/ad-image/brand-profile.json`. After that, every invocation reads that profile.
 
-## Install
+## Install (beginner-friendly)
+
+Open [Claude Code](https://claude.com/claude-code) and paste this in:
+
+> Install https://github.com/tenfoldmarc/ad-image-skill for me so I can create Instagram ads using OpenAI's image model. Connect Higgsfield MCP if I have an account, or set up direct OpenAI API access if I have an API key. Walk me through whichever I need.
+
+Claude will:
+1. Clone the skill into `~/.claude/skills/ad-image`
+2. Ask whether you want to use **Higgsfield** (browser sign-in, pay-as-you-go, best quality) or **OpenAI direct** (paste your API key, ~$0.10 per ad)
+3. Configure that for you
+4. Run the brand setup wizard so the skill knows your colors, fonts, portraits, and voice
+
+After that, type `/ad-image` any time you want a new batch of 4 ad variations.
+
+### Manual install (if you prefer terminal)
 
 ```bash
-# 1. Clone into your Claude skills directory
 git clone https://github.com/tenfoldmarc/ad-image-skill.git ~/.claude/skills/ad-image
-
-# 2. Open Claude Code and run
-/ad-image
 ```
 
-The setup wizard will run on first use.
+Then type `/ad-image` in Claude Code.
 
 ## Requirements
 
-- [Claude Code](https://claude.com/claude-code)
-- One of the following image generators (Higgsfield is recommended):
-  - [Higgsfield](https://higgsfield.ai/) account with credits (configured as an MCP server in Claude Code)
-  - OpenAI API key (for `gpt-image-1`)
-  - Other supported generators in your Claude Code config
+- [Claude Code](https://claude.com/claude-code) installed
+- An image generator (one of):
+  - **Higgsfield** account ([higgsfield.ai](https://higgsfield.ai/)) — recommended, best quality
+  - **OpenAI API key** — direct access to `gpt-image-1`
 
 ## Brand profile
 
